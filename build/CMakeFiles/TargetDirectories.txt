@@ -1,0 +1,5 @@
+/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles/sequential_imp.dir
+/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles/OpenMp.dir
+/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles/GPU_cuda.dir
+/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles/edit_cache.dir
+/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles/rebuild_cache.dir

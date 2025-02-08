@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/OpenMp.dir/OpenMp/main.cpp.o CMakeFiles/OpenMp.dir/OpenMp/nsc_solver.cpp.o -o OpenMp  /usr/lib/gcc/x86_64-linux-gnu/12/libgomp.so /usr/lib/x86_64-linux-gnu/libpthread.a 
