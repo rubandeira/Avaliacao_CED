@@ -181,7 +181,7 @@ CMakeFiles/GPU_cuda.dir/GPU_cuda/main.cu.o : /home/alunos/tei/2024/tei26703/AVAL
     /usr/include/c++/12/utility \
     /usr/include/c++/12/bits/stl_relops.h \
     /usr/include/c++/12/initializer_list \
-    /home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/GPU_cuda/nsc_solver.h \
+    /home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/GPU_cuda/nsc_solver.cuh \
     /usr/include/c++/12/iostream \
     /usr/include/c++/12/ostream \
     /usr/include/c++/12/ios \
@@ -274,6 +274,11 @@ CMakeFiles/GPU_cuda.dir/GPU_cuda/main.cu.o : /home/alunos/tei/2024/tei26703/AVAL
     /usr/include/c++/12/bits/ostream.tcc \
     /usr/include/c++/12/istream \
     /usr/include/c++/12/bits/istream.tcc \
+    /usr/include/c++/12/vector \
+    /usr/include/c++/12/bits/stl_uninitialized.h \
+    /usr/include/c++/12/bits/stl_vector.h \
+    /usr/include/c++/12/bits/stl_bvector.h \
+    /usr/include/c++/12/bits/vector.tcc \
     /usr/include/c++/12/chrono \
     /usr/include/c++/12/bits/chrono.h \
     /usr/include/c++/12/ratio \

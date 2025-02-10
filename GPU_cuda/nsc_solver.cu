@@ -1,55 +1,114 @@
-#include "nsc_solver.h"
+#include "nsc_solver.cuh"
 #include <cuda_runtime.h>
 #include <iostream>
+#include <fstream>
+#include <vector>
 
-__global__ void updateField(double* field, int gridSize, double dt, double epsilon, double mobility) {
+// CUDA kernel for initializing phase field
+__global__ void initializeFieldsKernel(double* phi, double* u, double* v, int gridSize, double bubbleRadius) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (i < gridSize && j < gridSize) {
+        double x = i - gridSize / 2;
+        double y = j - gridSize / 2;
+        phi[i * gridSize + j] = (x * x + y * y <= bubbleRadius * bubbleRadius) ? 1.0 : -1.0;
+        u[i * gridSize + j] = 0.0;
+        v[i * gridSize + j] = 0.0;
+    }
+}
+
+// Kernel for updating the chemical potential
+__global__ void updateChemicalPotentialKernel(double* phi, double* mu, SimulationParameters params, int gridSize) {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     int j = blockIdx.y * blockDim.y + threadIdx.y;
 
     if (i > 0 && i < gridSize - 1 && j > 0 && j < gridSize - 1) {
-        int idx = i * gridSize + j;
-        field[idx] += dt * (epsilon - mobility * field[idx]);
+        double laplacian = phi[(i + 1) * gridSize + j] + phi[(i - 1) * gridSize + j] +
+                           phi[i * gridSize + (j + 1)] + phi[i * gridSize + (j - 1)] -
+                           4.0 * phi[i * gridSize + j];
+        mu[i * gridSize + j] = -phi[i * gridSize + j] + phi[i * gridSize + j] * phi[i * gridSize + j] * phi[i * gridSize + j] - 
+                               params.epsilon * params.epsilon * laplacian;
     }
 }
 
-void runGPU(int gridSize, double dt, double simulationTime, double epsilon, double mobility) {
-    int timeSteps = static_cast<int>(simulationTime / dt);
-    size_t size = gridSize * gridSize * sizeof(double);
+// Kernel for updating phase field
+__global__ void updatePhaseFieldKernel(double* phi, double* mu, SimulationParameters params, int gridSize) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
 
-    // Allocate memory on the host and GPU
-    double* h_field = new double[gridSize * gridSize];
-    double* d_field;
-    cudaMalloc(&d_field, size);
+    if (i > 0 && i < gridSize - 1 && j > 0 && j < gridSize - 1) {
+        double muLaplacian = mu[(i + 1) * gridSize + j] + mu[(i - 1) * gridSize + j] +
+                             mu[i * gridSize + (j + 1)] + mu[i * gridSize + (j - 1)] -
+                             4.0 * mu[i * gridSize + j];
+        phi[i * gridSize + j] += params.dt * params.mobility * muLaplacian;
+    }
+}
 
-    // Initialize the field on the host
+// Kernel for updating velocity field (dummy implementation for now)
+__global__ void updateVelocityFieldKernel(double* u, double* v, double* phi, SimulationParameters params, int gridSize) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (i < gridSize && j < gridSize) {
+        u[i * gridSize + j] = 0.0;
+        v[i * gridSize + j] = 0.0;
+    }
+}
+
+// Function to allocate and launch CUDA kernels
+void initializeFieldsCUDA(double* d_phi, double* d_u, double* d_v, int gridSize, double bubbleRadius) {
+    dim3 threadsPerBlock(16, 16);
+    dim3 numBlocks((gridSize + threadsPerBlock.x - 1) / threadsPerBlock.x,
+                   (gridSize + threadsPerBlock.y - 1) / threadsPerBlock.y);
+
+    initializeFieldsKernel<<<numBlocks, threadsPerBlock>>>(d_phi, d_u, d_v, gridSize, bubbleRadius);
+    cudaDeviceSynchronize();
+}
+
+void updateChemicalPotentialCUDA(double* d_phi, double* d_mu, SimulationParameters params, int gridSize) {
+    dim3 threadsPerBlock(16, 16);
+    dim3 numBlocks((gridSize + threadsPerBlock.x - 1) / threadsPerBlock.x,
+                   (gridSize + threadsPerBlock.y - 1) / threadsPerBlock.y);
+
+    updateChemicalPotentialKernel<<<numBlocks, threadsPerBlock>>>(d_phi, d_mu, params, gridSize);
+    cudaDeviceSynchronize();
+}
+
+void updatePhaseFieldCUDA(double* d_phi, double* d_mu, SimulationParameters params, int gridSize) {
+    dim3 threadsPerBlock(16, 16);
+    dim3 numBlocks((gridSize + threadsPerBlock.x - 1) / threadsPerBlock.x,
+                   (gridSize + threadsPerBlock.y - 1) / threadsPerBlock.y);
+
+    updatePhaseFieldKernel<<<numBlocks, threadsPerBlock>>>(d_phi, d_mu, params, gridSize);
+    cudaDeviceSynchronize();
+}
+
+void updateVelocityFieldCUDA(double* d_u, double* d_v, double* d_phi, SimulationParameters params, int gridSize) {
+    dim3 threadsPerBlock(16, 16);
+    dim3 numBlocks((gridSize + threadsPerBlock.x - 1) / threadsPerBlock.x,
+                   (gridSize + threadsPerBlock.y - 1) / threadsPerBlock.y);
+
+    updateVelocityFieldKernel<<<numBlocks, threadsPerBlock>>>(d_u, d_v, d_phi, params, gridSize);
+    cudaDeviceSynchronize();
+}
+void saveResultsFromGPU(const double* d_phi, int gridSize, int step, const std::string& filename) {
+    std::vector<double> h_phi(gridSize * gridSize);
+    cudaMemcpy(h_phi.data(), d_phi, gridSize * gridSize * sizeof(double), cudaMemcpyDeviceToHost);
+
+    std::ofstream outFile(filename + "_step_" + std::to_string(step) + ".csv");
+    if (!outFile) {
+        std::cerr << "Error: Unable to open file " << filename << " for writing!" << std::endl;
+        return;
+    }
+
     for (int i = 0; i < gridSize; ++i) {
         for (int j = 0; j < gridSize; ++j) {
-            h_field[i * gridSize + j] = (i + j) % 2 == 0 ? 1.0 : -1.0;
+            outFile << h_phi[i * gridSize + j];
+            if (j < gridSize - 1) outFile << ",";
         }
+        outFile << "\n";
     }
-
-    // Copy the field to the GPU
-    cudaMemcpy(d_field, h_field, size, cudaMemcpyHostToDevice);
-
-    // Define CUDA kernel configuration
-    dim3 blockSize(16, 16);
-    dim3 gridSize2D((gridSize + blockSize.x - 1) / blockSize.x,
-                    (gridSize + blockSize.y - 1) / blockSize.y);
-
-    // Run the simulation
-    for (int t = 0; t < timeSteps; ++t) {
-        updateField<<<gridSize2D, blockSize>>>(d_field, gridSize, dt, epsilon, mobility);
-        cudaDeviceSynchronize();
-    }
-
-    // Copy the results back to the host
-    cudaMemcpy(h_field, d_field, size, cudaMemcpyDeviceToHost);
-
-    // Free GPU memory
-    cudaFree(d_field);
-
-    // Free host memory
-    delete[] h_field;
-
-    std::cout << "GPU simulation completed successfully using CUDA." << std::endl;
+    outFile.close();
 }
+
