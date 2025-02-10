@@ -7,14 +7,14 @@
 
 int main() {
     SimulationParameters params = {
-        .gridSize = 2048,  // Large grid size for better scaling on supercomputer
-        .dt = 0.0001,      // Stability-focused time step
-        .simulationTime = 1.0,
-        .epsilon = 1.0,
-        .mobility = 1.0,
-        .density = 1.0,
-        .viscosity = 0.1,
-        .surfaceTension = 1.0
+    .gridSize = 2048,  // Grid resolution remains the same
+    .dt = 0.0001,      // Keep the time step small for stability
+    .simulationTime = 5.0,  // Run the simulation for 5 units of time
+    .epsilon = 1.0,    // Interface thickness
+    .mobility = 20.0,  // Higher mobility for faster phase evolution
+    .density = 1.0,    // Fluid density remains unchanged
+    .viscosity = 0.001,  // Lower viscosity for less damping
+    .surfaceTension = 1.0  // Surface tension remains unchanged
     };
 
     int gridSize = params.gridSize;

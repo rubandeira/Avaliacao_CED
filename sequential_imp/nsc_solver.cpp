@@ -1,107 +1,110 @@
 #include "nsc_solver.h"
-#include <vector>
-#include <cmath>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <cmath>
 
+// Initialize the phase field and chemical potential arrays.
+// This function sets phi to 1.0 inside a circle (the "bubble") and -1.0 outside.
 void initializeFields(std::vector<std::vector<double>>& phi,
-                      std::vector<std::vector<double>>& u,
-                      std::vector<std::vector<double>>& v,
-                      int gridSize, double bubbleRadius) {
-    int centerX = gridSize / 2;
-    int centerY = gridSize / 2;
-    double radiusSquared = bubbleRadius * bubbleRadius;
+                      std::vector<std::vector<double>>& mu,
+                      const SimulationParameters& params) {
+    int N = params.gridSize;
+    double radius = 100.0;  // You can adjust this value if needed
 
-    for (int i = 0; i < gridSize; ++i) {
-        for (int j = 0; j < gridSize; ++j) {
-            double dx = i - centerX;
-            double dy = j - centerY;
-            double distanceSquared = dx * dx + dy * dy;
-
-            // ✅ Assign +1 inside the bubble, -1 outside, and ensure valid values
-            phi[i][j] = (distanceSquared <= radiusSquared) ? 1.0 : -1.0;
-
-            // ✅ Prevent uninitialized values
-            if (std::isnan(phi[i][j])) {
-                std::cerr << "Error: NaN detected in phi initialization at (" << i << ", " << j << ")" << std::endl;
-                exit(1);
-            }
-
-            u[i][j] = 0.0;
-            v[i][j] = 0.0;
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            double x = i - N / 2;
+            double y = j - N / 2;
+            phi[i][j] = (x * x + y * y <= radius * radius) ? 1.0 : -1.0;
+            mu[i][j] = 0.0;
         }
     }
 }
 
+// Update the chemical potential field based on the current phi.
+// The equation used is: mu = -phi + phi^3 - ε² * (Laplacian of phi)
+void updateChemicalPotential(std::vector<std::vector<double>>& phi,
+                             std::vector<std::vector<double>>& mu,
+                             const SimulationParameters& params) {
+    int N = params.gridSize;
+    double epsilonSquared = params.epsilon * params.epsilon;
+
+    for (int i = 1; i < N - 1; ++i) {
+        for (int j = 1; j < N - 1; ++j) {
+            double laplacian = phi[i+1][j] + phi[i-1][j] + phi[i][j+1] + phi[i][j-1] - 4.0 * phi[i][j];
+            mu[i][j] = -phi[i][j] + phi[i][j]*phi[i][j]*phi[i][j] - epsilonSquared * laplacian;
+        }
+    }
+}
+
+// Update the phase field using the chemical potential.
+// The update is: phi += dt * mobility * (Laplacian of mu)
 void updatePhaseField(std::vector<std::vector<double>>& phi,
                       std::vector<std::vector<double>>& mu,
                       const SimulationParameters& params) {
     int N = params.gridSize;
-    double epsilonSquared = params.epsilon * params.epsilon;
-
-    std::vector<std::vector<double>> laplacian(N, std::vector<double>(N, 0.0));
-
     for (int i = 1; i < N - 1; ++i) {
         for (int j = 1; j < N - 1; ++j) {
-            laplacian[i][j] = phi[i + 1][j] + phi[i - 1][j] +
-                              phi[i][j + 1] + phi[i][j - 1] -
-                              4.0 * phi[i][j];
-
-            if (std::isnan(laplacian[i][j])) {
-                std::cerr << "Error: NaN detected in laplacian at (" << i << ", " << j << ")" << std::endl;
-                exit(1);
-            }
-        }
-    }
-    
-    for (int i = 1; i < N - 1; ++i) {
-        for (int j = 1; j < N - 1; ++j) {
-            double phiVal = phi[i][j];
-            double fPrime = 2.0 * phiVal * (1.0 - phiVal * phiVal);
-            mu[i][j] = -epsilonSquared * laplacian[i][j] + fPrime;
-
-            if (std::isnan(mu[i][j])) {
-                std::cerr << "Error: NaN detected in mu at (" << i << ", " << j << ")" << std::endl;
-                exit(1);
-            }
-        }
-    }
-
-    for (int i = 1; i < N - 1; ++i) {
-        for (int j = 1; j < N - 1; ++j) {
-            double muLaplacian = mu[i + 1][j] + mu[i - 1][j] +
-                                 mu[i][j + 1] + mu[i][j - 1] - 4.0 * mu[i][j];
-
-            if (std::isnan(muLaplacian)) {
-                std::cerr << "Error: NaN detected in muLaplacian at (" << i << ", " << j << ")" << std::endl;
-                exit(1);
-            }
-
+            double muLaplacian = mu[i+1][j] + mu[i-1][j] + mu[i][j+1] + mu[i][j-1] - 4.0 * mu[i][j];
             phi[i][j] += params.dt * params.mobility * muLaplacian;
         }
     }
 }
 
-// ✅ Velocity Update (Navier-Stokes Equations)
-void updateVelocityField(std::vector<std::vector<double>>& u,
-                         std::vector<std::vector<double>>& v,
-                         std::vector<std::vector<double>>& phi,
-                         const SimulationParameters& params) {
+// Save the current phase field (phi) into a CSV file.
+void saveResults(const std::vector<std::vector<double>>& phi, int step, const std::string& filename) {
+    std::ofstream outFile(filename + "_step_" + std::to_string(step) + ".csv");
+    if (!outFile.is_open()) {
+        std::cerr << "Error: Could not open file for writing!\n";
+        return;
+    }
+    outFile << std::fixed << std::setprecision(6);
+    for (const auto& row : phi) {
+        for (const auto& value : row) {
+            outFile << value << ",";
+        }
+        outFile << "\n";
+    }
+    outFile.close();
+}
+
+// Run the simulation. This function iterates through the time steps,
+// updates the chemical potential and phase field, and saves results periodically.
+void runSimulation(const SimulationParameters& params) {
     int N = params.gridSize;
-    double dt = params.dt;
-    double rho = params.density;
-    double eta = params.viscosity;
-    double sigma = params.surfaceTension;
+    // Calculate total number of steps: simulationTime/dt
+    int steps = static_cast<int>(params.simulationTime / params.dt);
 
-    for (int i = 1; i < N - 1; ++i) {
-        for (int j = 1; j < N - 1; ++j) {
-            double gradPhiX = (phi[i + 1][j] - phi[i - 1][j]) / 2.0;
-            double gradPhiY = (phi[i][j + 1] - phi[i][j - 1]) / 2.0;
+    // Allocate and initialize the phase field (phi) and chemical potential (mu)
+    std::vector<std::vector<double>> phi(N, std::vector<double>(N, 0.0));
+    std::vector<std::vector<double>> mu(N, std::vector<double>(N, 0.0));
 
-            double laplacianU = u[i + 1][j] + u[i - 1][j] + u[i][j + 1] + u[i][j - 1] - 4.0 * u[i][j];
-            double laplacianV = v[i + 1][j] + v[i - 1][j] + v[i][j + 1] + v[i][j - 1] - 4.0 * v[i][j];
+    initializeFields(phi, mu, params);
 
-            u[i][j] += dt * (-gradPhiX * sigma / rho + eta * laplacianU / rho);
-            v[i][j] += dt * (-gradPhiY * sigma / rho + eta * laplacianV / rho);
+    for (int step = 0; step <= steps; ++step) {
+        // Update the chemical potential and phase field
+        updateChemicalPotential(phi, mu, params);
+        updatePhaseField(phi, mu, params);
+
+        if (step % 500 == 0) {
+            std::cout << "Phi values (sample) after " << step << " steps:\n";
+            for (int i = N / 2 - 5; i <= N / 2 + 5; ++i) {
+                for (int j = N / 2 - 5; j <= N / 2 + 5; ++j) {
+                    std::cout << phi[i][j] << " ";
+                }
+                std::cout << "\n";
+            }
+        }
+
+        // Save results periodically (every 500 steps)
+        if (step % 500 == 0) {
+            saveResults(phi, step, "simulation_results");
+            
+        if (step == steps - 1) {  // Save only the last step
+            saveResults(phi, step, "simulation_results_final");
+        }
+        
         }
     }
 }

@@ -1,34 +1,34 @@
-#ifndef NSC_SOLVER_H
-#define NSC_SOLVER_H
+#pragma once
 
 #include <vector>
+#include <string>
 
-// Structure to store simulation parameters
+// Define the simulation parameters
 struct SimulationParameters {
-    int gridSize;
-    double dt;
-    double simulationTime;
-    double epsilon;
-    double mobility;
-    double density;
-    double viscosity;
-    double surfaceTension;
+    int gridSize;          // Grid resolution
+    double dt;             // Time step size
+    double simulationTime; // Total simulation time
+    double epsilon;        // Interface thickness
+    double mobility;       // Mobility parameter
+    double density;        // Fluid density
+    double viscosity;      // Fluid viscosity
+    double surfaceTension; // Surface tension
 };
 
 // Function declarations
 void initializeFields(std::vector<std::vector<double>>& phi,
-                      std::vector<std::vector<double>>& u,
-                      std::vector<std::vector<double>>& v,
-                      int gridSize, double bubbleRadius);
+                      std::vector<std::vector<double>>& mu,
+                      const SimulationParameters& params);
+
+void updateChemicalPotential(std::vector<std::vector<double>>& phi,
+                             std::vector<std::vector<double>>& mu,
+                             const SimulationParameters& params);
 
 void updatePhaseField(std::vector<std::vector<double>>& phi,
                       std::vector<std::vector<double>>& mu,
                       const SimulationParameters& params);
 
-void updateVelocityField(std::vector<std::vector<double>>& u,
-                         std::vector<std::vector<double>>& v,
-                         std::vector<std::vector<double>>& phi,
-                         const SimulationParameters& params);
+void saveResults(const std::vector<std::vector<double>>& phi, int step, const std::string& filename);
 
-#endif // NSC_SOLVER_H
+void runSimulation(const SimulationParameters& params);
 

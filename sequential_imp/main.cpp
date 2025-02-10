@@ -1,49 +1,35 @@
 #include "nsc_solver.h"
+#include <chrono>
 #include <iostream>
-#include <fstream>
-#include <vector>
 
 int main() {
+    // Define simulation parameters with adjustments for faster runtime while maintaining physical relevance
     SimulationParameters params = {
-        .gridSize = 128,
-        .dt = 0.0001,
-        .simulationTime = 1.0,
-        .epsilon = 1.0,
-        .mobility = 1.0,
-        .density = 1.0,
-        .viscosity = 0.1,
-        .surfaceTension = 1.0
+        .gridSize = 1024,     // Reduced grid resolution to balance runtime and accuracy
+        .dt = 0.001,          // Larger time step to speed up computation
+        .simulationTime = 2.0, // Reduced simulation time
+        .epsilon = 1.0,       // Interface thickness remains the same
+        .mobility = 10.0,     // Adjusted mobility for phase evolution
+        .density = 1.0,       // Fluid density unchanged
+        .viscosity = 0.01,    // Slightly higher viscosity for numerical stability
+        .surfaceTension = 1.0 // Surface tension unchanged
     };
 
-    int gridSize = params.gridSize;
-    double bubbleRadius = gridSize / 8.0;
+    std::cout << "Starting sequential simulation...\n";
 
-    std::vector<std::vector<double>> phi(gridSize, std::vector<double>(gridSize, 0.0));
-    std::vector<std::vector<double>> u(gridSize, std::vector<double>(gridSize, 0.0));
-    std::vector<std::vector<double>> v(gridSize, std::vector<double>(gridSize, 0.0));
+    // Start timing the simulation
+    auto start = std::chrono::high_resolution_clock::now();
 
-    initializeFields(phi, u, v, gridSize, bubbleRadius);
+    // Run the simulation (results will be periodically saved as CSV files)
+    runSimulation(params);
 
-    int steps = static_cast<int>(params.simulationTime / params.dt);
-    for (int t = 0; t < steps; ++t) {
-        std::vector<std::vector<double>> mu(gridSize, std::vector<double>(gridSize, 0.0));
-        updatePhaseField(phi, mu, params);
-        updateVelocityField(u, v, phi, params);
-    }
-	std::ofstream outFile("simulation_results.txt");
-	if (outFile.is_open()) {
-	    outFile << "i j phi[i][j]\n";  // Add headers for clarity
-	    for (int i = 0; i < gridSize; ++i) {
-	        for (int j = 0; j < gridSize; ++j) {
-	            outFile << i << " " << j << " " << phi[i][j] << "\n";
-	        }
-	    }
-	    outFile.close();
-	    std::cout << "Simulation results saved to simulation_results.txt" << std::endl;
-	} else {
-	    std::cerr << "Error: Unable to open file for writing." << std::endl;
-	}
-    std::cout << "Simulation complete." << std::endl;
+    // End timing the simulation
+    auto end = std::chrono::high_resolution_clock::now();
+    double elapsed = std::chrono::duration<double>(end - start).count();
+
+    std::cout << "Simulation completed.\n";
+    std::cout << "Execution time: " << elapsed << " seconds.\n";
+
     return 0;
 }
 
