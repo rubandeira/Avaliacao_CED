@@ -5,14 +5,14 @@
 int main() {
     // Define simulation parameters
     SimulationParameters params = {
-        1024,    // gridSize
+        2048,    // gridSize
         0.0001,  // dt
-        10.0,     // simulationTime
+        2.0,     // simulationTime
         1.0,     // epsilon
-        50.0,    // mobility
+        10.0,    // mobility
         1.0,     // density
         0.01,   // viscosity
-        0.5      // surfaceTension
+        0.1      // surfaceTension
     };
 
     int gridSize = params.gridSize;
