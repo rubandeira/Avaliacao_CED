@@ -1,0 +1,32 @@
+#include "nsc_solver.cuh"
+#include <cuda_runtime.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+// ✅ Optimize Kernel Launch Configuration
+dim3 threadsPerBlock(16, 16);
+dim3 numBlocks(int gridSize) {
+    return dim3((gridSize + threadsPerBlock.x - 1) / threadsPerBlock.x,
+                (gridSize + threadsPerBlock.y - 1) / threadsPerBlock.y);
+}
+
+// ✅ Kernel for initializing the phase field
+__global__ void initializeFieldsKernel(double* phi, double* u, double* v, int gridSize, double bubbleRadius) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (i < gridSize && j < gridSize) {
+        double x = i - gridSize / 2;
+        double y = j - gridSize / 2;
+        phi[i * gridSize + j] = (x * x + y * y <= bubbleRadius * bubbleRadius) ? 1.0 : -1.0;
+        u[i * gridSize + j] = 0.0;
+        v[i * gridSize + j] = 0.0;
+    }
+}
+
+void initializeFieldsCUDA(double* d_phi, double* d_u, double* d_v, int gridSize, double bubbleRadius) {
+    initializeFieldsKernel<<<numBlocks(gridSize), threadsPerBlock>>>(d_phi, d_u, d_v, gridSize, bubbleRadius);
+    cudaDeviceSynchronize();
+}
+a

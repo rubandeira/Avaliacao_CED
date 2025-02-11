@@ -4,7 +4,7 @@
 # compile CUDA with /usr/local/cuda/bin/nvcc
 CUDA_DEFINES = 
 
-CUDA_INCLUDES = -I/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/GPU_cuda
+CUDA_INCLUDES = -I/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/max_perf_cuda
 
 CUDA_FLAGS =  -arch=sm_80 --use_fast_math --generate-code=arch=compute_52,code=[compute_52,sm_52] -std=c++17
 

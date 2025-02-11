@@ -155,6 +155,19 @@ GPU_cuda/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GPU_cuda.dir/build.make CMakeFiles/GPU_cuda.dir/build
 .PHONY : GPU_cuda/fast
 
+#=============================================================================
+# Target rules for targets named max_perf_cuda
+
+# Build rule for target.
+max_perf_cuda: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 max_perf_cuda
+.PHONY : max_perf_cuda
+
+# fast build rule for target.
+max_perf_cuda/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/build
+.PHONY : max_perf_cuda/fast
+
 GPU_cuda/main.o: GPU_cuda/main.cu.o
 .PHONY : GPU_cuda/main.o
 
@@ -251,6 +264,54 @@ OpenMp/nsc_solver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/OpenMp.dir/build.make CMakeFiles/OpenMp.dir/OpenMp/nsc_solver.cpp.s
 .PHONY : OpenMp/nsc_solver.cpp.s
 
+max_perf_cuda/main.o: max_perf_cuda/main.cu.o
+.PHONY : max_perf_cuda/main.o
+
+# target to build an object file
+max_perf_cuda/main.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/max_perf_cuda/main.cu.o
+.PHONY : max_perf_cuda/main.cu.o
+
+max_perf_cuda/main.i: max_perf_cuda/main.cu.i
+.PHONY : max_perf_cuda/main.i
+
+# target to preprocess a source file
+max_perf_cuda/main.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/max_perf_cuda/main.cu.i
+.PHONY : max_perf_cuda/main.cu.i
+
+max_perf_cuda/main.s: max_perf_cuda/main.cu.s
+.PHONY : max_perf_cuda/main.s
+
+# target to generate assembly for a file
+max_perf_cuda/main.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/max_perf_cuda/main.cu.s
+.PHONY : max_perf_cuda/main.cu.s
+
+max_perf_cuda/nsc_solver.o: max_perf_cuda/nsc_solver.cu.o
+.PHONY : max_perf_cuda/nsc_solver.o
+
+# target to build an object file
+max_perf_cuda/nsc_solver.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/max_perf_cuda/nsc_solver.cu.o
+.PHONY : max_perf_cuda/nsc_solver.cu.o
+
+max_perf_cuda/nsc_solver.i: max_perf_cuda/nsc_solver.cu.i
+.PHONY : max_perf_cuda/nsc_solver.i
+
+# target to preprocess a source file
+max_perf_cuda/nsc_solver.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/max_perf_cuda/nsc_solver.cu.i
+.PHONY : max_perf_cuda/nsc_solver.cu.i
+
+max_perf_cuda/nsc_solver.s: max_perf_cuda/nsc_solver.cu.s
+.PHONY : max_perf_cuda/nsc_solver.s
+
+# target to generate assembly for a file
+max_perf_cuda/nsc_solver.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/max_perf_cuda/nsc_solver.cu.s
+.PHONY : max_perf_cuda/nsc_solver.cu.s
+
 sequential_imp/main.o: sequential_imp/main.cpp.o
 .PHONY : sequential_imp/main.o
 
@@ -309,6 +370,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... GPU_cuda"
 	@echo "... OpenMp"
+	@echo "... max_perf_cuda"
 	@echo "... sequential_imp"
 	@echo "... GPU_cuda/main.o"
 	@echo "... GPU_cuda/main.i"
@@ -322,6 +384,12 @@ help:
 	@echo "... OpenMp/nsc_solver.o"
 	@echo "... OpenMp/nsc_solver.i"
 	@echo "... OpenMp/nsc_solver.s"
+	@echo "... max_perf_cuda/main.o"
+	@echo "... max_perf_cuda/main.i"
+	@echo "... max_perf_cuda/main.s"
+	@echo "... max_perf_cuda/nsc_solver.o"
+	@echo "... max_perf_cuda/nsc_solver.i"
+	@echo "... max_perf_cuda/nsc_solver.s"
 	@echo "... sequential_imp/main.o"
 	@echo "... sequential_imp/main.i"
 	@echo "... sequential_imp/main.s"
