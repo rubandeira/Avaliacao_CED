@@ -125,5 +125,4 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/sequential_imp.dir/DependInfo.cmake"
   "CMakeFiles/OpenMp.dir/DependInfo.cmake"
   "CMakeFiles/GPU_cuda.dir/DependInfo.cmake"
-  "CMakeFiles/max_perf_cuda.dir/DependInfo.cmake"
   )

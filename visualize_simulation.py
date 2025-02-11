@@ -9,7 +9,7 @@ def load_simulation_data(file_path):
     if not os.path.exists(file_path):
         print(f"⚠ Warning: File {file_path} not found, skipping...")
         return None
-    print(f"✅ Loading {file_path}...")
+    print(f"Loading {file_path}...")
     return np.loadtxt(file_path, delimiter=",")
 
 def plot_phase_field(file_path, step, grid_size):
@@ -34,7 +34,7 @@ def plot_phase_field(file_path, step, grid_size):
     output_filename = f"phase_field_step_{step}.png"
     plt.savefig(output_filename, dpi=600, bbox_inches="tight")
     plt.close()
-    print(f"🖼 Saved: {output_filename}")
+    print(f"Saved: {output_filename}")
 
 # Define parameters
 grid_size = 1024  # Must match your CUDA simulation grid size
@@ -42,7 +42,7 @@ steps_to_plot = [0, 10, 20, 30, 40, 60, 80, 100]  # Customize this based on save
 
 # Process and plot key steps
 for step in steps_to_plot:
-    file_path = f"/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/simulation_results_step_{step}.csv"
+    file_path = f"/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/simulation_results_Openmp_step_{step}.csv"
     plot_phase_field(file_path, step, grid_size)
 
-print("✅ Visualization completed!")
+print("Visualization completed!")

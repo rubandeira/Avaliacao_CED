@@ -31,12 +31,4 @@ add_executable(GPU_cuda
 )
 set_target_properties(GPU_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 target_include_directories(GPU_cuda PRIVATE ${CMAKE_SOURCE_DIR}/GPU_cuda)
-
-# Visualizer
-add_executable(max_perf_cuda
-    max_perf_cuda/main.cu
-    max_perf_cuda/nsc_solver.cu
-)
-set_target_properties(max_perf_cuda PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-target_include_directories(max_perf_cuda PRIVATE ${CMAKE_SOURCE_DIR}/max_perf_cuda)
 set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -arch=sm_80 --use_fast_math")

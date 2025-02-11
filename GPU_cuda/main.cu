@@ -43,7 +43,7 @@ int main() {
 
 
         if (t % 10 == 0 && t <= 100) {
-            saveResultsFromGPU(d_phi, gridSize, t, "simulation_results");
+            saveResultsFromGPU(d_phi, gridSize, t, "simulation_results_cuda");
         }
     }
 

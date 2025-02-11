@@ -20,8 +20,7 @@ void initializeFields(std::vector<std::vector<double>>& phi,
     }
 }
 
-// Update the chemical potential field based on the current phi.
-// The equation used is: mu = -phi + phi^3 - ε² * (Laplacian of phi)
+
 void updateChemicalPotential(std::vector<std::vector<double>>& phi,
                              std::vector<std::vector<double>>& mu,
                              const SimulationParameters& params) {
@@ -36,8 +35,6 @@ void updateChemicalPotential(std::vector<std::vector<double>>& phi,
     }
 }
 
-// Update the phase field using the chemical potential.
-// The update is: phi += dt * mobility * (Laplacian of mu)
 void updatePhaseField(std::vector<std::vector<double>>& phi,
                       std::vector<std::vector<double>>& mu,
                       const SimulationParameters& params) {
@@ -85,19 +82,9 @@ void runSimulation(const SimulationParameters& params) {
         updateChemicalPotential(phi, mu, params);
         updatePhaseField(phi, mu, params);
 
-        if (step % 500 == 0) {
-            std::cout << "Phi values (sample) after " << step << " steps:\n";
-            for (int i = N / 2 - 5; i <= N / 2 + 5; ++i) {
-                for (int j = N / 2 - 5; j <= N / 2 + 5; ++j) {
-                    std::cout << phi[i][j] << " ";
-                }
-                std::cout << "\n";
-            }
-        }
-
-        // Save results periodically (every 500 steps)
+        // Save results periodically
         if (step % 10 == 0 && step <= 100) {
-            saveResults(phi, step, "simulation_results");
+            saveResults(phi, step, "simulation_results_sequential");
         
         }
     }

@@ -8,15 +8,16 @@
 int main() {
     // Define simulation parameters (matching the sequential version)
     SimulationParameters params = {
-        .gridSize = 1024,   // Same grid size as sequential
-        .dt = 0.001,       // Same time step
-        .simulationTime = 2.0, // Same total simulation time
-        .epsilon = 1.0,     // Interface thickness
-        .mobility = 10.0,   // Mobility for phase evolution
-        .density = 1.0,     // Density remains unchanged
-        .viscosity = 0.01, // Low viscosity for less damping
-        .surfaceTension = 1.0 // Surface tension unchanged
-    };
+            .gridSize = 1024,     // Reduced grid resolution to balance runtime and accuracy
+            .dt = 0.001,          // Larger time step to speed up computation
+            .simulationTime = 2.0, // Reduced simulation time
+            .epsilon = 1.0,       // Interface thickness remains the same
+            .mobility = 10.0,     // Adjusted mobility for phase evolution
+            .density = 1.0,       // Fluid density unchanged
+            .viscosity = 0.01,    // Slightly higher viscosity for numerical stability
+            .surfaceTension = 0.1 // Surface tension unchanged
+        };
+    
 
     int gridSize = params.gridSize;
     int steps = static_cast<int>(params.simulationTime / params.dt); // Ensure same step count as sequential
@@ -66,14 +67,15 @@ int main() {
             }
         }
 
-        // ✅ Save phase field (`phi`) values every **500** steps (same as Sequential)
-        if (t % 500 == 0) {
-            std::string filename = "simulation_results_step_" + std::to_string(t) + ".csv";
+        // Save phase field (`phi`) values
+		if (t % 10 == 0 && t <= 100) {
+            std::string filename = "simulation_results_Openmp_step_" + std::to_string(t) + ".csv";
             std::ofstream outputFile(filename);
-            if (!outputFile) {
-                std::cerr << "Error: Unable to open " << filename << " for writing!\n";
-                return 1;
-            }
+		            if (!outputFile) {
+		                std::cerr << "Error: Unable to open " << filename << " for writing!\n";
+		                return 1;
+		            }
+
 
             for (int i = 0; i < gridSize; ++i) {
                 for (int j = 0; j < gridSize; ++j) {

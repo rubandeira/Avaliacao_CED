@@ -66,7 +66,6 @@ CMAKE_BINARY_DIR = /home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/bu
 all: CMakeFiles/sequential_imp.dir/all
 all: CMakeFiles/OpenMp.dir/all
 all: CMakeFiles/GPU_cuda.dir/all
-all: CMakeFiles/max_perf_cuda.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -77,7 +76,6 @@ preinstall:
 clean: CMakeFiles/sequential_imp.dir/clean
 clean: CMakeFiles/OpenMp.dir/clean
 clean: CMakeFiles/GPU_cuda.dir/clean
-clean: CMakeFiles/max_perf_cuda.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -87,7 +85,7 @@ clean: CMakeFiles/max_perf_cuda.dir/clean
 CMakeFiles/sequential_imp.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sequential_imp.dir/build.make CMakeFiles/sequential_imp.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sequential_imp.dir/build.make CMakeFiles/sequential_imp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles --progress-num=12,13,14 "Built target sequential_imp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles --progress-num=8,9,10 "Built target sequential_imp"
 .PHONY : CMakeFiles/sequential_imp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -157,32 +155,6 @@ GPU_cuda: CMakeFiles/GPU_cuda.dir/rule
 CMakeFiles/GPU_cuda.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GPU_cuda.dir/build.make CMakeFiles/GPU_cuda.dir/clean
 .PHONY : CMakeFiles/GPU_cuda.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/max_perf_cuda.dir
-
-# All Build rule for target.
-CMakeFiles/max_perf_cuda.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles --progress-num=8,9,10,11 "Built target max_perf_cuda"
-.PHONY : CMakeFiles/max_perf_cuda.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/max_perf_cuda.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/max_perf_cuda.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alunos/tei/2024/tei26703/AVALIACAO_CED/Avaliacao_CED/build/CMakeFiles 0
-.PHONY : CMakeFiles/max_perf_cuda.dir/rule
-
-# Convenience name for target.
-max_perf_cuda: CMakeFiles/max_perf_cuda.dir/rule
-.PHONY : max_perf_cuda
-
-# clean rule for target.
-CMakeFiles/max_perf_cuda.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/max_perf_cuda.dir/build.make CMakeFiles/max_perf_cuda.dir/clean
-.PHONY : CMakeFiles/max_perf_cuda.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
