@@ -6,13 +6,13 @@ int main() {
     // Define simulation parameters
     SimulationParameters params = {
         1024,    // gridSize
-        0.001,  // dt
-        2.0,     // simulationTime
+        0.0001,  // dt
+        10.0,     // simulationTime
         1.0,     // epsilon
-        10.0,    // mobility
+        50.0,    // mobility
         1.0,     // density
         0.01,   // viscosity
-        1.0      // surfaceTension
+        0.5      // surfaceTension
     };
 
     int gridSize = params.gridSize;
@@ -41,8 +41,8 @@ int main() {
         updatePhaseFieldCUDA(d_phi, d_mu, params, gridSize);
         updateVelocityFieldCUDA(d_u, d_v, d_phi, params, gridSize);
 
-        // ✅ Save phase field (`phi`) every 500 steps
-        if (t % 500 == 0) {
+
+        if (t % 10000 == 0) {
             saveResultsFromGPU(d_phi, gridSize, t, "simulation_results");
         }
     }

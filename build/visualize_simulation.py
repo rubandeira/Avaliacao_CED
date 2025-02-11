@@ -37,12 +37,12 @@ def plot_phase_field(file_path, step, grid_size):
     print(f"🖼 Saved: {output_filename}")
 
 # Define parameters
-grid_size = 4096  # Must match your CUDA simulation grid size
-steps_to_plot = [0, 10000, 20000, 30000, 40000, 50000]  # Customize this based on saved simulation steps
+grid_size = 1024  # Must match your CUDA simulation grid size
+steps_to_plot = [0, 10000, 30000, 60000, 80000, 100000]  # Customize this based on saved simulation steps
 
 # Process and plot key steps
 for step in steps_to_plot:
-    file_path = f"simulation_results_step_step_{step}.csv"
+    file_path = f"simulation_results_step_{step}.csv"
     plot_phase_field(file_path, step, grid_size)
 
 print("✅ Visualization completed!")

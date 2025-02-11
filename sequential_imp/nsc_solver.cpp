@@ -4,8 +4,6 @@
 #include <iomanip>
 #include <cmath>
 
-// Initialize the phase field and chemical potential arrays.
-// This function sets phi to 1.0 inside a circle (the "bubble") and -1.0 outside.
 void initializeFields(std::vector<std::vector<double>>& phi,
                       std::vector<std::vector<double>>& mu,
                       const SimulationParameters& params) {
@@ -100,10 +98,6 @@ void runSimulation(const SimulationParameters& params) {
         // Save results periodically (every 500 steps)
         if (step % 500 == 0) {
             saveResults(phi, step, "simulation_results");
-            
-        if (step == steps - 1) {  // Save only the last step
-            saveResults(phi, step, "simulation_results_final");
-        }
         
         }
     }
