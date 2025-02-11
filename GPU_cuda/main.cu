@@ -5,9 +5,9 @@
 int main() {
     // Define simulation parameters
     SimulationParameters params = {
-        2048,    // gridSize
-        0.0001,  // dt
-        2.0,     // simulationTime
+        1024,    // gridSize
+        0.001,  // dt
+        1.0,     // simulationTime
         1.0,     // epsilon
         10.0,    // mobility
         1.0,     // density
@@ -42,7 +42,7 @@ int main() {
         updateVelocityFieldCUDA(d_u, d_v, d_phi, params, gridSize);
 
 
-        if (t % 10 == 0 && t <= 1000) {
+        if (t % 10 == 0 && t <= 100) {
             saveResultsFromGPU(d_phi, gridSize, t, "simulation_results");
         }
     }

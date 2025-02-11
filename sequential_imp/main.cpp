@@ -12,7 +12,7 @@ int main() {
         .mobility = 10.0,     // Adjusted mobility for phase evolution
         .density = 1.0,       // Fluid density unchanged
         .viscosity = 0.01,    // Slightly higher viscosity for numerical stability
-        .surfaceTension = 1.0 // Surface tension unchanged
+        .surfaceTension = 0.1 // Surface tension unchanged
     };
 
     std::cout << "Starting sequential simulation...\n";

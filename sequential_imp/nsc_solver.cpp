@@ -96,7 +96,7 @@ void runSimulation(const SimulationParameters& params) {
         }
 
         // Save results periodically (every 500 steps)
-        if (step % 500 == 0) {
+        if (step % 10 == 0 && step <= 100) {
             saveResults(phi, step, "simulation_results");
         
         }
