@@ -42,7 +42,7 @@ int main() {
         updateVelocityFieldCUDA(d_u, d_v, d_phi, params, gridSize);
 
 
-        if (t % 10000 == 0) {
+        if (t % 100 == 0 && t <= 1000) {
             saveResultsFromGPU(d_phi, gridSize, t, "simulation_results");
         }
     }
