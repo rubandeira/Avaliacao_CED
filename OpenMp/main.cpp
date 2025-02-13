@@ -8,14 +8,14 @@
 int main() {
     // Define simulation parameters (matching the sequential version)
     SimulationParameters params = {
-            .gridSize = 1024,     // Reduced grid resolution to balance runtime and accuracy
-            .dt = 0.001,          // Larger time step to speed up computation
-            .simulationTime = 2.0, // Reduced simulation time
-            .epsilon = 1.0,       // Interface thickness remains the same
-            .mobility = 10.0,     // Adjusted mobility for phase evolution
-            .density = 1.0,       // Fluid density unchanged
-            .viscosity = 0.01,    // Slightly higher viscosity for numerical stability
-            .surfaceTension = 0.1 // Surface tension unchanged
+            .gridSize = 1024,     
+            .dt = 0.001,          
+            .simulationTime = 2.0, 
+            .epsilon = 1.0,       
+            .mobility = 10.0,     
+            .density = 1.0,       
+            .viscosity = 0.01,    
+            .surfaceTension = 0.1 
         };
     
 
@@ -43,10 +43,10 @@ int main() {
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    // **Ensure same number of steps as Sequential Version**
+  
     for (int t = 0; t <= steps; ++t) {
 
-        // **Parallel Phase Field Update**
+     
         #pragma omp parallel
         {
             #pragma omp for collapse(2)
@@ -57,7 +57,7 @@ int main() {
                 }
             }
 
-            // **Update Phase Field Using the Chemical Potential**
+            
             #pragma omp for collapse(2)
             for (int i = 1; i < gridSize - 1; ++i) {
                 for (int j = 1; j < gridSize - 1; ++j) {
@@ -67,7 +67,7 @@ int main() {
             }
         }
 
-        // Save phase field (`phi`) values
+       
 		if (t % 10 == 0 && t <= 100) {
             std::string filename = "simulation_results_Openmp_step_" + std::to_string(t) + ".csv";
             std::ofstream outputFile(filename);
