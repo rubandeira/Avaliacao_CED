@@ -1,4 +1,4 @@
-#High-Performance Computing Implementation of the Cahn-Hilliard Equation
+# High-Performance Computing Implementation of the Cahn-Hilliard Equation
 
 This repository contains three implementations of a Cahn-Hilliard equation solver, developed as part of a High-Performance Computing (HPC) project. The goal is to analyze the computational efficiency of different parallel computing techniques and compare their performance in solving phase separation problems.
 
