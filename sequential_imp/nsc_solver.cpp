@@ -8,7 +8,7 @@ void initializeFields(std::vector<std::vector<double>>& phi,
                       std::vector<std::vector<double>>& mu,
                       const SimulationParameters& params) {
     int N = params.gridSize;
-    double radius = 100.0;  // You can adjust this value if needed
+    double radius = 100.0;  
 
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
@@ -47,7 +47,7 @@ void updatePhaseField(std::vector<std::vector<double>>& phi,
     }
 }
 
-// Save the current phase field (phi) into a CSV file.
+
 void saveResults(const std::vector<std::vector<double>>& phi, int step, const std::string& filename) {
     std::ofstream outFile(filename + "_step_" + std::to_string(step) + ".csv");
     if (!outFile.is_open()) {
@@ -64,8 +64,7 @@ void saveResults(const std::vector<std::vector<double>>& phi, int step, const st
     outFile.close();
 }
 
-// Run the simulation. This function iterates through the time steps,
-// updates the chemical potential and phase field, and saves results periodically.
+
 void runSimulation(const SimulationParameters& params) {
     int N = params.gridSize;
     // Calculate total number of steps: simulationTime/dt
@@ -82,7 +81,7 @@ void runSimulation(const SimulationParameters& params) {
         updateChemicalPotential(phi, mu, params);
         updatePhaseField(phi, mu, params);
 
-        // Save results periodically
+       
         if (step % 10 == 0 && step <= 100) {
             saveResults(phi, step, "simulation_results_sequential");
         
