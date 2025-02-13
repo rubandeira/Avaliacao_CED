@@ -3,7 +3,7 @@
 
 #include <vector>
 
-// Structure to store simulation parameters
+
 struct SimulationParameters {
     int gridSize;
     double dt;
@@ -15,7 +15,7 @@ struct SimulationParameters {
     double surfaceTension;
 };
 
-// Function declarations
+
 void initializeFields(std::vector<std::vector<double>>& phi,
                       std::vector<std::vector<double>>& u,
                       std::vector<std::vector<double>>& v,
