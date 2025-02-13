@@ -13,15 +13,15 @@ The Cahn-Hilliard equation models phase separation in multi-component systems. G
 
 # This project uses CMake for streamlined compilation. Follow these steps to build and execute the code:
 
-# Create a build directory and compile the project
+## Create a build directory and compile the project
 mkdir build && cd build
 cmake .. && make -j$(nproc)
 
-# Run the different implementations
+## Run the different implementations
 
-- ./Sequential/sequential_imp
-- ./OpenMP/openmp_imp
-- ./CUDA/cuda_imp
+- ./build/sequential_imp
+- ./build/OpenMP
+- ./build/GPU_cuda
 Performance Analysis & Results
 
 Execution time for each implementation was measured, and speedup factors were computed to assess efficiency:
@@ -38,13 +38,8 @@ Python scripts are included to generate visual representations of the phase fiel
 
 - python3 Python/visualize_simulation.py
 - python3 Python/speedup_analysis.py
+
 These scripts generate graphs showing execution time comparisons, speedup factors, and phase evolution over time.
 
-# Future Work & Improvements
-
-Implementing multi-GPU scaling to further optimize CUDA performance.
-Testing adaptive mesh refinement (AMR) for enhanced accuracy.
-Exploring hybrid CPU-GPU execution to balance workload distribution.
-Contributors
 
 Creator : Rúben Bandeira
