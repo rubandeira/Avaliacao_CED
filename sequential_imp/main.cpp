@@ -3,16 +3,16 @@
 #include <iostream>
 
 int main() {
-    // Define simulation parameters with adjustments for faster runtime while maintaining physical relevance
+    
     SimulationParameters params = {
-        .gridSize = 1024,     // Reduced grid resolution to balance runtime and accuracy
-        .dt = 0.001,          // Larger time step to speed up computation
-        .simulationTime = 2.0, // Reduced simulation time
-        .epsilon = 1.0,       // Interface thickness remains the same
-        .mobility = 10.0,     // Adjusted mobility for phase evolution
-        .density = 1.0,       // Fluid density unchanged
-        .viscosity = 0.01,    // Slightly higher viscosity for numerical stability
-        .surfaceTension = 0.1 // Surface tension unchanged
+        .gridSize = 1024,     
+        .dt = 0.001,          
+        .simulationTime = 2.0, 
+        .epsilon = 1.0,       
+        .mobility = 10.0,     
+        .density = 1.0,       
+        .viscosity = 0.01,   
+        .surfaceTension = 0.1 
     };
 
     std::cout << "Starting sequential simulation...\n";
