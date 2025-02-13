@@ -34,7 +34,7 @@ void updatePhaseField(std::vector<std::vector<double>>& phi,
     int N = params.gridSize;
     double epsilonSquared = params.epsilon * params.epsilon;
 
-    const int TILE_SIZE = 64;  // Tile size to improve cache performance
+    const int TILE_SIZE = 64; 
 
     #pragma omp parallel for collapse(2) schedule(static)
     for (int ii = 1; ii < N - 1; ii += TILE_SIZE) {
@@ -66,7 +66,7 @@ void updatePhaseField(std::vector<std::vector<double>>& phi,
     }
 }
 
-// Update Velocity Field (Navier-Stokes)
+
 void updateVelocityField(std::vector<std::vector<double>>& u,
                          std::vector<std::vector<double>>& v,
                          std::vector<std::vector<double>>& phi,
