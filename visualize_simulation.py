@@ -18,8 +18,7 @@ def plot_phase_field(file_path, step, grid_size):
     """
     phi = load_simulation_data(file_path)
     if phi is None:
-        return  # Skip if file is missing
-
+        return 
     plt.figure(figsize=(10, 10))
     plt.title(f"Phase Field at Step {step}", fontsize=14)
     plt.imshow(phi, extent=(0, grid_size, 0, grid_size), origin='lower', cmap='coolwarm')
@@ -30,15 +29,15 @@ def plot_phase_field(file_path, step, grid_size):
     plt.yticks(fontsize=10)
     plt.grid(False)
 
-    # Save high-resolution image
+  
     output_filename = f"phase_field_step_{step}.png"
     plt.savefig(output_filename, dpi=600, bbox_inches="tight")
     plt.close()
     print(f"Saved: {output_filename}")
 
 # Define parameters
-grid_size = 1024  # Must match your CUDA simulation grid size
-steps_to_plot = [0, 10, 20, 30, 40, 60, 80, 100]  # Customize this based on saved simulation steps
+grid_size = 1024  
+steps_to_plot = [0, 10, 20, 30, 40, 60, 80, 100]  
 
 # Process and plot key steps
 for step in steps_to_plot:
